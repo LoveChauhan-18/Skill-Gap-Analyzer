@@ -1,0 +1,303 @@
+/* =====================================================
+   DASHBOARD PREVIEW — Hero mockup
+   ===================================================== */
+
+.dbp-shell {
+  display: flex;
+  background: #111111;
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 420px;
+  font-size: 13px;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────── */
+.dbp-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #0d0d0d;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dbp-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 12px;
+}
+
+.dbp-sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d0d0d;
+  flex-shrink: 0;
+}
+
+.dbp-sidebar-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.dbp-sidebar-role {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+.dbp-sidebar-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 12px 8px 6px;
+}
+
+.dbp-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dbp-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.5);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dbp-nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.8);
+}
+
+.dbp-nav-item.active {
+  background: rgba(168, 230, 61, 0.12);
+  color: var(--accent);
+}
+
+.dbp-nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.dbp-nav-item.active .dbp-nav-dot {
+  opacity: 1;
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* ── MAIN ─────────────────────────────────────────── */
+.dbp-main {
+  flex: 1;
+  padding: 20px 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dbp-main-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dbp-main-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.dbp-main-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 3px;
+}
+
+.dbp-quick-btn {
+  padding: 7px 14px;
+  background: rgba(168, 230, 61, 0.15);
+  border: 1px solid rgba(168, 230, 61, 0.3);
+  border-radius: 9999px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dbp-quick-btn:hover {
+  background: rgba(168, 230, 61, 0.25);
+}
+
+/* ── STATS ────────────────────────────────────────── */
+.dbp-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.dbp-stat-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.dbp-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.dbp-stat-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+}
+
+.dbp-stat-trend {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.dbp-stat-trend.up {
+  background: rgba(168, 230, 61, 0.15);
+  color: var(--accent);
+}
+
+.dbp-stat-trend.down {
+  background: rgba(255, 100, 100, 0.15);
+  color: #ff6464;
+}
+
+.dbp-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+}
+
+/* ── CHARTS ───────────────────────────────────────── */
+.dbp-charts-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  flex: 1;
+}
+
+.dbp-chart-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dbp-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dbp-chart-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+}
+
+.dbp-chart-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.dbp-chart-tab {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dbp-chart-tab.active {
+  background: var(--accent);
+  color: #0d0d0d;
+  font-weight: 700;
+}
+
+/* ── GAP LIST ─────────────────────────────────────── */
+.dbp-gaps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dbp-gap-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dbp-gap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dbp-gap-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+}
+
+.dbp-gap-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.dbp-gap-badge.high {
+  background: rgba(255, 100, 100, 0.15);
+  color: #ff7070;
+}
+
+.dbp-gap-badge.medium {
+  background: rgba(255, 180, 60, 0.15);
+  color: #ffb43c;
+}
+
+.dbp-gap-badge.low {
+  background: rgba(168, 230, 61, 0.15);
+  color: var(--accent);
+}

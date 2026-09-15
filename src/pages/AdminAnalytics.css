@@ -1,0 +1,194 @@
+/* ============================================================
+   CIRRUS ADMIN ANALYTICS STYLES
+   ============================================================ */
+
+.admin-page-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding-top: 86px;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 10px;
+  padding-bottom: 60px;
+}
+
+.admin-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+.admin-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.admin-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #09090b;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-header h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.admin-header p {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+.status-pill-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: #d1fae5;
+  color: #047857;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.admin-stats .stat-card {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-icon-wrapper.sessions { background: #dbeafe; color: #2563eb; }
+.stat-icon-wrapper.speech { background: #ffedd5; color: #f97316; }
+.stat-icon-wrapper.llm { background: #d1fae5; color: #10b981; }
+.stat-icon-wrapper.users { background: #e0e7ff; color: #6366f1; }
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.model-monitor-card {
+  position: relative;
+  z-index: 10;
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.model-monitor-card .card-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.model-monitor-card .card-header p {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.model-grid { display: flex; flex-direction: column; gap: 12px; }
+.model-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+.mod-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.mod-domain {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #64748b;
+}
+.mod-latency {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #475569;
+}
+.mod-status.healthy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #10b981;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}

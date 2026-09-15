@@ -1,0 +1,277 @@
+/* ============================================================
+   CIRRUS RECRUITER DASHBOARD STYLES
+   ============================================================ */
+
+.recruiter-page-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding-top: 86px;
+}
+
+.recruiter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 10px;
+  padding-bottom: 60px;
+}
+
+.disclaimer-banner {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px -8px rgba(245, 158, 11, 0.12);
+}
+.banner-icon { color: #d97706; flex-shrink: 0; margin-top: 2px; }
+.banner-text h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #b45309;
+  margin-bottom: 4px;
+}
+.banner-text p {
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.55;
+}
+
+.recruiter-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .recruiter-stats { grid-template-columns: 1fr; }
+}
+
+.recruiter-stats .stat-card {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-icon-wrapper.cand { background: #dbeafe; color: #2563eb; }
+.stat-icon-wrapper.rec { background: #d1fae5; color: #10b981; }
+.stat-icon-wrapper.export { background: #ffedd5; color: #f97316; }
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.directory-card {
+  position: relative;
+  z-index: 10;
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.directory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 20px;
+}
+.directory-header h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.directory-header p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.directory-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-box .icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+}
+.search-box .search-input {
+  padding: 9px 14px 9px 38px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 13px;
+  width: 220px;
+  outline: none;
+}
+.status-select {
+  padding: 9px 16px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.table-responsive { overflow-x: auto; }
+.recruiter-table { width: 100%; border-collapse: collapse; text-align: left; }
+.recruiter-table th {
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+.recruiter-table td {
+  padding: 16px 16px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cand-name { font-weight: 700; color: #0f172a; font-family: var(--font-display); }
+.cand-email { font-family: var(--font-mono); font-size: 12px; color: #94a3b8; }
+
+.readiness-pill {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+}
+.readiness-pill.recommended { background: #d1fae5; color: #047857; }
+.readiness-pill.review { background: #ffedd5; color: #c2410c; }
+
+.mini-domain-scores { display: flex; gap: 6px; flex-wrap: wrap; }
+.mini-chip {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.mini-chip.dsa { background: #e0e7ff; color: #4338ca; }
+.mini-chip.dbms { background: #e0f2fe; color: #0369a1; }
+.mini-chip.fs { background: #d1fae5; color: #047857; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 9999px; font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+.status-badge.recommended { background: #d1fae5; color: #047857; }
+.status-badge.practice { background: #ffedd5; color: #c2410c; }
+
+.btn-table-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #09090b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.drawer-card {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 36px;
+  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.25);
+}
+.drawer-header h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.score-summary-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+}
+.box-val {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.box-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.ai-summary-box {
+  background: #dbeafe;
+  border-radius: 16px;
+  padding: 20px;
+}
+.ai-summary-box h4 {
+  font-size: 14px;
+  color: #1e40af;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.ai-summary-box p {
+  font-size: 13px;
+  color: #1e3a8a;
+  line-height: 1.55;
+}

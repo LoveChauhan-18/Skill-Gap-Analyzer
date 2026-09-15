@@ -1,0 +1,125 @@
+/* ============================================================
+   CIRRUS SKY & CLOUDS BACKGROUND
+   Painterly, soft sky aesthetic with floating clouds
+   ============================================================ */
+
+.cirrus-sky-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Base Sky Blue Gradient */
+.sky-gradient-base {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #4194d6 0%,
+    #5aa4e0 35%,
+    #7bbceb 65%,
+    #a2d1f4 85%,
+    #d1ebff 100%
+  );
+}
+
+/* Soft Sun Glow in Top Right */
+.sky-sun-glow {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 245, 220, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(60px);
+}
+
+/* Painterly Fluffy Cloud Layers */
+.painterly-cloud {
+  position: absolute;
+  background-repeat: repeat-x;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Cloud Layer 1 — Distant Large Fluff */
+.cloud-layer-1 {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 480px;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 100%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.8) 45%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  filter: blur(12px);
+  animation: cloudFloat 45s ease-in-out infinite alternate;
+}
+
+/* Cloud Layer 2 — Midground Cumulus Puffs */
+.cloud-layer-2 {
+  top: 15%;
+  right: -5%;
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.4) 40%,
+    transparent 70%
+  );
+  filter: blur(35px);
+  animation: cloudDriftRight 35s linear infinite;
+}
+
+/* Cloud Layer 3 — Foreground Subtle Mist */
+.cloud-layer-3 {
+  top: 45%;
+  left: -10%;
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 75%
+  );
+  filter: blur(40px);
+  animation: cloudDriftLeft 50s linear infinite;
+}
+
+.sky-cloud-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(4px);
+  opacity: 0.9;
+}
+
+/* Animations */
+@keyframes cloudFloat {
+  0% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-15px) scale(1.02); }
+  100% { transform: translateY(10px) scale(0.98); }
+}
+
+@keyframes cloudDriftRight {
+  0% { transform: translateX(0px); }
+  100% { transform: translateX(-150px); }
+}
+
+@keyframes cloudDriftLeft {
+  0% { transform: translateX(0px); }
+  100% { transform: translateX(180px); }
+}

@@ -1,0 +1,281 @@
+/* ============================================================
+   CIRRUS CANDIDATE DASHBOARD STYLES
+   ============================================================ */
+
+.dashboard-page-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding-top: 100px;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 80px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+.user-welcome {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2563eb;
+}
+.user-welcome h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+.user-welcome p {
+  font-size: 13px;
+  color: #64748b;
+  font-family: var(--font-mono);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stats-grid .stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.1), 0 4px 12px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-icon-wrapper.score { background: #dbeafe; color: #2563eb; }
+.stat-icon-wrapper.sessions { background: #ffedd5; color: #f97316; }
+.stat-icon-wrapper.time { background: #d1fae5; color: #10b981; }
+.stat-icon-wrapper.trend { background: #e0e7ff; color: #6366f1; }
+
+.stat-info { display: flex; flex-direction: column; }
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 900px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+}
+.chart-header {
+  margin-bottom: 20px;
+}
+.chart-header h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.chart-header p {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #64748b;
+}
+
+.chart-render-wrapper {
+  width: 100%;
+  height: 260px;
+  min-height: 260px;
+  position: relative;
+}
+
+.history-section {
+  background: #ffffff;
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 18px;
+}
+.history-header h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+.history-header p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+}
+.search-input {
+  padding: 9px 14px 9px 38px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 13px;
+  width: 220px;
+  outline: none;
+}
+.domain-select-filter {
+  padding: 9px 16px;
+  border-radius: 9999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.table-responsive { overflow-x: auto; }
+.history-table { width: 100%; border-collapse: collapse; text-align: left; }
+.history-table th {
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+.history-table td {
+  padding: 16px 16px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.domain-chip {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.domain-chip.dsa { background: #e0e7ff; color: #4338ca; }
+.domain-chip.dbms { background: #e0f2fe; color: #0369a1; }
+.domain-chip.fullstack { background: #d1fae5; color: #047857; }
+
+.score-badge {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+}
+.score-badge.high { background: #d1fae5; color: #047857; }
+.score-badge.medium { background: #ffedd5; color: #c2410c; }
+
+.btn-table-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #09090b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-card-xl {
+  position: relative; width: 100%; max-width: 900px; max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff; border-radius: 28px; padding: 36px;
+  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.25);
+}
+.modal-close-btn {
+  position: absolute; top: 20px; right: 20px;
+  background: #f1f5f9; color: #64748b;
+  border-radius: 50%; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
