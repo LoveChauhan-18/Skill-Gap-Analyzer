@@ -1,534 +1,413 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { Navigate } from 'react-router-dom'
 import {
-  Play,
-  PlayCircle,
-  ArrowRight,
   Sparkles,
   Mic,
   BrainCircuit,
-  LineChart,
   UserCheck,
   CheckCircle2,
-  Search,
-  Bell,
-  Share2,
-  Download,
-  Calendar,
+  ArrowRight,
+  ChevronDown,
+  Star,
+  Zap,
+  Target,
+  Clock,
+  Trophy,
+  Play,
+  MessageSquare,
+  BarChart3,
+  FileDown,
   Code2,
   Database,
-  Layers,
-  ShieldCheck,
-  FileSpreadsheet,
-  Terminal,
-  Activity,
-  Award
+  Layers
 } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { useInterview } from '../context/InterviewContext'
 import { useAuth } from '../context/AuthContext'
 import './Landing.css'
 
-export default function Landing() {
-  const navigate = useNavigate()
-  const { startSession, setSelectedDomain, setSelectedDifficulty } = useInterview()
-  const { switchRole } = useAuth()
-  const [activeTab, setActiveTab] = useState('Overview')
+/* ── Animated count-up hook ── */
+function useCountUp(target, duration = 1800, start = false) {
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    if (!start) return
+    let startTime = null
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      setValue(Math.floor(progress * target))
+      if (progress < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [target, duration, start])
+  return value
+}
 
-  const handleStartQuickSession = (domain) => {
-    setSelectedDomain(domain)
-    setSelectedDifficulty('Medium')
-    startSession(domain, 'Medium')
-    navigate('/simulator')
+/* ── FAQ Accordion Item ── */
+function FaqItem({ q, a }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className={`faq-item ${open ? 'open' : ''}`}>
+      <button className="faq-question" onClick={() => setOpen(!open)}>
+        <span>{q}</span>
+        <ChevronDown size={18} className={`faq-chevron ${open ? 'rotated' : ''}`} />
+      </button>
+      <div className="faq-answer-wrapper" style={{ maxHeight: open ? '300px' : '0' }}>
+        <p className="faq-answer">{a}</p>
+      </div>
+    </div>
+  )
+}
+
+export default function Landing() {
+  const { startSession, setSelectedDomain, setSelectedDifficulty } = useInterview()
+  const { isAuthenticated, user, ROLE_HOME, setAuthModalOpen } = useAuth()
+  const statsRef = useRef(null)
+  const [statsVisible, setStatsVisible] = useState(false)
+
+  // Redirect logged-in users to their role dashboard
+  if (isAuthenticated && user) {
+    return <Navigate to={ROLE_HOME[user.role] || '/dashboard'} replace />
   }
 
+  // Trigger count-up animation when stats section enters viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true) },
+      { threshold: 0.3 }
+    )
+    if (statsRef.current) observer.observe(statsRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const sessions   = useCountUp(382,  1600, statsVisible)
+  const accuracy   = useCountUp(984,  1800, statsVisible)
+  const latency    = useCountUp(14,   1400, statsVisible)
+  const avgScore   = useCountUp(884,  1800, statsVisible)
+
+  const openAuth = (role = 'candidate') => {
+    setAuthModalOpen(true)
+  }
+
+  const FEATURES = [
+    {
+      icon: <Mic size={22} />,
+      title: 'Speech & Text Capture',
+      desc: 'Speak naturally using the browser Web Speech API or type technical answers. Features live audio waveforms and editable transcripts.',
+      tag: 'Live Mic',
+      color: 'feature-blue'
+    },
+    {
+      icon: <BrainCircuit size={22} />,
+      title: 'Evidence-Grounded AI Feedback',
+      desc: 'RAG-supported evaluation scores answers on Technical Accuracy, Communication, and Problem Solving with zero hallucinations.',
+      tag: 'AI Powered',
+      color: 'feature-violet'
+    },
+    {
+      icon: <UserCheck size={22} />,
+      title: 'Recruiter Screening Portal',
+      desc: 'HR candidate directory with domain-readiness scores, AI summaries, and human decision notes. Decision-support labeled.',
+      tag: 'HR Ready',
+      color: 'feature-green'
+    },
+    {
+      icon: <Code2 size={22} />,
+      title: 'DSA Question Bank',
+      desc: 'Arrays, Trees, Graphs, Dynamic Programming, Heaps, and Sorting. Spoken complexity analysis and Time/Space O(N) evaluation.',
+      tag: 'DSA',
+      color: 'feature-orange'
+    },
+    {
+      icon: <Database size={22} />,
+      title: 'DBMS Track',
+      desc: 'ACID properties, B+ Tree Indexing, SQL Joins, Transactions, and Normalization with query optimization feedback.',
+      tag: 'DBMS',
+      color: 'feature-teal'
+    },
+    {
+      icon: <Layers size={22} />,
+      title: 'Full Stack Track',
+      desc: 'React, Node.js, Express, REST APIs, JWT Auth, microservices, and web performance with architecture evaluation.',
+      tag: 'Full Stack',
+      color: 'feature-rose'
+    },
+  ]
+
+  const STEPS = [
+    { icon: <Target size={28} />, step: '01', title: 'Choose Your Domain', desc: 'Pick DSA, DBMS, or Full Stack. Select your difficulty level from Easy to Hard.' },
+    { icon: <MessageSquare size={28} />, step: '02', title: 'Answer AI Questions', desc: 'Speak or type answers to dynamic, role-relevant technical interview questions.' },
+    { icon: <BarChart3 size={28} />, step: '03', title: 'Get Your AI Report', desc: 'Receive grounded feedback on accuracy, clarity, and efficiency. Download your PDF report.' },
+  ]
+
+  const TESTIMONIALS = [
+    {
+      name: 'Love Chauhan',
+      role: 'Software Engineer Candidate',
+      avatar: 'LC',
+      avatarBg: '#2563eb',
+      quote: 'The DSA track is incredibly realistic. The AI feedback was specific and grounded — it didn\'t just say "good job", it explained what I missed in my binary search implementation.',
+      stars: 5,
+      tag: 'Candidate'
+    },
+    {
+      name: 'Sarah Chen',
+      role: 'Senior Technical Recruiter',
+      avatar: 'SC',
+      avatarBg: '#ea580c',
+      quote: 'We screened 28 candidates in a fraction of the time. The readiness scores are consistent, objective, and the PDF reports make shortlisting incredibly easy.',
+      stars: 5,
+      tag: 'Recruiter'
+    },
+    {
+      name: 'Ravi Mehta',
+      role: 'Full Stack Engineer Candidate',
+      avatar: 'RM',
+      avatarBg: '#059669',
+      quote: 'I went from 72% to 91% readiness over 6 sessions. The progress chart showed exactly where I improved. Highly recommend before any FAANG interview.',
+      stars: 5,
+      tag: 'Candidate'
+    },
+  ]
+
+  const FAQS = [
+    {
+      q: 'Is this a real AI interview or pre-recorded questions?',
+      a: 'Every question is dynamically generated and evaluated using a large language model with RAG grounding. There are no pre-recorded answers — every session is unique.'
+    },
+    {
+      q: 'Can I speak my answers instead of typing?',
+      a: 'Yes. The platform supports the browser Web Speech API for live speech recognition with an editable transcript. Text entry is also fully supported as a fallback.'
+    },
+    {
+      q: 'How is the feedback different from other platforms?',
+      a: 'Our feedback is evidence-grounded — every claim is traceable to your actual answer. We score Technical Accuracy, Communication Clarity, and Problem-Solving approach with zero hallucinated claims.'
+    },
+    {
+      q: 'Can recruiters see my interview sessions?',
+      a: 'Only if your employer has a Recruiter account on the platform. The system uses strict RBAC data isolation — candidates and recruiters have completely separate data views.'
+    },
+    {
+      q: 'Can I export my results?',
+      a: 'Yes. Every completed session generates a downloadable PDF report with your scores, feedback, and recommendations. CSV export is available for recruiters.'
+    },
+  ]
+
   return (
-    <div className="cirrus-landing-page">
+    <div className="landing-page">
       <Navbar />
 
-      {/* ============================================================
-          HERO SECTION (PRD Compliant AI Interview Coach)
-      ============================================================ */}
-      <section className="cirrus-hero-section">
+      {/* ─────────────────────────────────────
+          1. HERO
+      ───────────────────────────────────── */}
+      <section className="hero-section">
         <div className="container hero-container">
-          {/* Main Headline */}
-          <h1 className="hero-display-title">
-            Master technical interviews <br className="desktop-only" />
-            with <span className="serif-accent">an</span> AI Coach.
+          <div className="hero-eyebrow">
+            <Sparkles size={14} className="eyebrow-icon" />
+            <span>AI-Powered Technical Interview Coach</span>
+          </div>
+
+          <h1 className="hero-headline">
+            Ace technical interviews<br />
+            <span className="hero-headline-accent">before the real one.</span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="hero-display-sub">
-            AI Interview Coach simulates realistic mock technical interviews across <strong>DSA</strong>,{' '}
-            <strong>DBMS</strong>, and <strong>Full Stack</strong> domains. Evaluate spoken or typed answers, 
-            receive actionable feedback, and streamline recruiter candidate screening.
+          <p className="hero-sub">
+            Realistic mock interviews across DSA, DBMS, and Full Stack. Speak or type your answers,
+            get evidence-grounded AI feedback, and track your readiness over time.
           </p>
 
-          {/* Pill CTA Group */}
-          <div className="hero-cta-pill-group">
-            <Link to="/simulator" className="btn-black-pill hero-primary-btn">
-              <Play size={15} fill="currentColor" />
-              <span>Start Mock Interview</span>
-            </Link>
-            <Link to="/dashboard" className="btn-white-pill hero-secondary-btn">
-              <LineChart size={17} />
-              <span>View Score Dashboard</span>
-            </Link>
+          <div className="hero-cta-split">
+            <button className="hero-cta-card cta-candidate" onClick={() => openAuth('candidate')}>
+              <div className="cta-card-icon cta-icon-blue">🎓</div>
+              <div className="cta-card-body">
+                <div className="cta-card-title">I'm a Candidate</div>
+                <div className="cta-card-sub">Practice, get scored, track progress</div>
+              </div>
+              <ArrowRight size={18} className="cta-card-arrow" />
+            </button>
+            <button className="hero-cta-card cta-recruiter" onClick={() => openAuth('recruiter')}>
+              <div className="cta-card-icon cta-icon-orange">🧑‍💼</div>
+              <div className="cta-card-body">
+                <div className="cta-card-title">I'm a Recruiter</div>
+                <div className="cta-card-sub">Screen candidates, view AI summaries</div>
+              </div>
+              <ArrowRight size={18} className="cta-card-arrow" />
+            </button>
           </div>
 
-          {/* ============================================================
-              HERO EMBEDDED DASHBOARD CARD PREVIEW (PRD Metrics)
-          ============================================================ */}
-          <div className="hero-dashboard-preview-card cirrus-card">
-            {/* Top Dashboard Header Navigation */}
-            <div className="dash-card-header">
-              <div className="dash-tabs-pill">
-                {['Overview', 'Simulator', 'Candidate Screening', 'Analytics'].map((tab) => (
-                  <button
-                    key={tab}
-                    className={`dash-tab ${activeTab === tab ? 'active' : ''}`}
-                    onClick={() => setActiveTab(tab)}
-                  >
-                    {tab === 'Overview' && <span className="tab-icon">⊞</span>}
-                    {tab}
-                    {tab === 'Candidate Screening' && <span className="tab-count font-mono">28</span>}
-                  </button>
-                ))}
-              </div>
+          <p className="hero-no-credit">No credit card · No setup · Start in 30 seconds</p>
+        </div>
+      </section>
 
-              <div className="dash-search-right">
-                <div className="dash-search-input-box">
-                  <Search size={14} className="search-ic" />
-                  <input type="text" placeholder="Search sessions, candidates..." readOnly />
-                </div>
-                <button className="dash-icon-btn"><Bell size={15} /></button>
-                <div className="dash-avatar-badge">AI</div>
-              </div>
-            </div>
-
-            {/* Main Dashboard Body */}
-            <div className="dash-card-body">
-              {/* Left Column: Interview Overview */}
-              <div className="dash-main-column">
-                <div className="dash-section-title-row">
-                  <div>
-                    <h2 className="dash-title">Interview readiness overview</h2>
-                    <p className="dash-sub">Real-time evaluation signals across DSA, DBMS, and Full Stack rounds.</p>
-                  </div>
-                  <div className="dash-action-pills">
-                    <button className="pill-sub-btn"><Calendar size={13} /> 7 days</button>
-                    <button className="pill-sub-btn"><Download size={13} /> Export PDF</button>
-                    <button className="pill-black-sm"><Share2 size={13} /> Share</button>
-                  </div>
-                </div>
-
-                {/* Metric Strip (4 Stat Cards from PRD) */}
-                <div className="dash-metrics-strip">
-                  <div className="dash-stat-box">
-                    <div className="stat-hdr">⚡ Sessions Run Today</div>
-                    <div className="stat-val font-display">382</div>
-                    <div className="stat-trend trend-up">↑ 18% wow</div>
-                  </div>
-                  <div className="dash-stat-box">
-                    <div className="stat-hdr">🎯 Groundedness Rate</div>
-                    <div className="stat-val font-display">98.4%</div>
-                    <div className="stat-trend trend-up">↑ Zero hallucinated claims</div>
-                  </div>
-                  <div className="dash-stat-box">
-                    <div className="stat-hdr">⏱ Speech-to-Text Latency</div>
-                    <div className="stat-val font-display">1.4s</div>
-                    <div className="stat-trend trend-up">↑ 12% faster</div>
-                  </div>
-                  <div className="dash-stat-box">
-                    <div className="stat-hdr">🏆 Avg Readiness Score</div>
-                    <div className="stat-val font-display">88.4</div>
-                    <div className="stat-trend trend-up">↑ 14% improvement</div>
-                  </div>
-                </div>
-
-                {/* Multi Progress Bar (Domain Coverage) */}
-                <div className="dash-multi-progress-bar">
-                  <div className="bar-seg seg-blue" style={{ width: '45%' }} title="DSA" />
-                  <div className="bar-seg seg-orange" style={{ width: '30%' }} title="DBMS" />
-                  <div className="bar-seg seg-green" style={{ width: '25%' }} title="Full Stack" />
-                </div>
-
-                {/* Stacked Bar Chart Section (Candidate Score Trends) */}
-                <div className="dash-chart-container">
-                  <div className="chart-header-row">
-                    <div>
-                      <h3 className="chart-title">Candidate Performance Trends</h3>
-                      <span className="chart-subtitle trend-up">↑ 18% score growth over repeated sessions</span>
-                    </div>
-                    <div className="chart-legend">
-                      <span className="legend-item"><span className="leg-dot dot-blue" /> DSA</span>
-                      <span className="legend-item"><span className="leg-dot dot-orange" /> DBMS</span>
-                      <span className="legend-item"><span className="leg-dot dot-green" /> Full Stack</span>
-                      <button className="view-chart-btn" onClick={() => navigate('/dashboard')}>View Full ↗</button>
-                    </div>
-                  </div>
-
-                  {/* Visual Bar Chart */}
-                  <div className="chart-bars-wrapper">
-                    {[
-                      { month: 'Session 1', blue: 35, orange: 15 },
-                      { month: 'Session 2', blue: 45, orange: 20 },
-                      { month: 'Session 3', blue: 55, orange: 22 },
-                      { month: 'Session 4', blue: 68, orange: 25 },
-                      { month: 'Session 5', blue: 82, orange: 28 },
-                      { month: 'Session 6', blue: 95, orange: 32, tooltip: true },
-                      { month: 'Session 7', blue: 90, orange: 30 },
-                      { month: 'Session 8', blue: 110, orange: 35 },
-                      { month: 'Session 9', blue: 125, orange: 38 },
-                      { month: 'Next', dashed: true },
-                    ].map((item, idx) => (
-                      <div key={idx} className="chart-col">
-                        {item.tooltip && (
-                          <div className="chart-tooltip-box">
-                            <div className="tt-date font-mono">Session #6 Evaluation</div>
-                            <div className="tt-row"><span className="leg-dot dot-blue" /> DSA Score: <strong>92/100</strong></div>
-                            <div className="tt-row"><span className="leg-dot dot-orange" /> DBMS Score: <strong>88/100</strong></div>
-                          </div>
-                        )}
-                        <div className="bar-stack">
-                          {item.dashed ? (
-                            <div className="bar-dashed-placeholder" style={{ height: '90px' }} />
-                          ) : (
-                            <>
-                              <div className="bar-seg-orange" style={{ height: `${item.orange * 1.2}px` }} />
-                              <div className="bar-seg-blue" style={{ height: `${item.blue * 1.2}px` }} />
-                            </>
-                          )}
-                        </div>
-                        <span className="col-month font-mono">{item.month}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: AI Suggestion & Candidate Readiness */}
-              <div className="dash-side-column">
-                {/* AI Evidence Feedback Card */}
-                <div className="side-card ai-suggestions-panel">
-                  <div className="chat-bubbles-stack">
-                    <div className="chat-bubble left-bubble">"Your explanation of B+ tree indexing is accurate."</div>
-                    <div className="chat-bubble right-bubble">"Consider mentioning node splitting time complexity O(log N)."</div>
-                    <div className="chat-bubble ai-generating-pill">
-                      <Sparkles size={12} className="sparkle-ic" /> Grounding feedback with LLM...
-                    </div>
-                  </div>
-                  <div className="side-card-footer">
-                    <h4 className="side-card-title">Evidence-Grounded Feedback</h4>
-                    <p className="side-card-desc">Evaluates speech transcript & text answers with zero hallucination. Traceable to actual answer content.</p>
-                  </div>
-                </div>
-
-                {/* Candidate Readiness Gauge */}
-                <div className="side-card lead-quality-panel">
-                  <div className="gauge-header">
-                    <span className="gauge-title">Candidate Readiness Index</span>
-                    <span className="gauge-dots">•••</span>
-                  </div>
-                  <div className="gauge-visual-container">
-                    <svg viewBox="0 0 100 55" className="gauge-svg">
-                      <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" strokeWidth="8" strokeLinecap="round" />
-                      <path d="M 10 50 A 40 40 0 0 1 85 40" fill="none" stroke="url(#gaugeGradient)" strokeWidth="8" strokeLinecap="round" />
-                      <defs>
-                        <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#2563eb" />
-                          <stop offset="100%" stopColor="#10b981" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <div className="gauge-center-text">
-                      <span className="gauge-val font-display">1,420</span>
-                      <span className="gauge-lbl">sessions completed</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* ─────────────────────────────────────
+          2. STATS TICKER
+      ───────────────────────────────────── */}
+      <section className="stats-section" ref={statsRef}>
+        <div className="container stats-grid">
+          <div className="stat-pill">
+            <span className="stat-number">{sessions}<span className="stat-unit">+</span></span>
+            <span className="stat-label">Sessions Run Today</span>
+          </div>
+          <div className="stat-divider" />
+          <div className="stat-pill">
+            <span className="stat-number">{(accuracy / 10).toFixed(1)}<span className="stat-unit">%</span></span>
+            <span className="stat-label">Groundedness Rate</span>
+          </div>
+          <div className="stat-divider" />
+          <div className="stat-pill">
+            <span className="stat-number">{(latency / 10).toFixed(1)}<span className="stat-unit">s</span></span>
+            <span className="stat-label">Speech-to-Text Latency</span>
+          </div>
+          <div className="stat-divider" />
+          <div className="stat-pill">
+            <span className="stat-number">{(avgScore / 10).toFixed(1)}</span>
+            <span className="stat-label">Avg Readiness Score</span>
           </div>
         </div>
       </section>
 
-      {/* ============================================================
-          3-CARD FEATURE GRID SECTION (PRD Features)
-      ============================================================ */}
-      <section className="cirrus-section section">
+      {/* ─────────────────────────────────────
+          3. FEATURE GRID
+      ───────────────────────────────────── */}
+      <section className="section features-section">
         <div className="container">
-          <div className="three-cards-grid">
-            {/* Card 1: Speech & Text Answer Capture */}
-            <div className="cirrus-feature-card cirrus-card">
-              <div className="card-badge-icon">
-                <Mic size={18} />
+          <div className="section-header">
+            <h2 className="section-title">Everything you need to prepare smarter</h2>
+            <p className="section-sub">Six core capabilities, built for candidates and hiring teams.</p>
+          </div>
+          <div className="features-grid">
+            {FEATURES.map((f, i) => (
+              <div key={i} className={`feature-card ${f.color}`}>
+                <div className="feature-icon-box">{f.icon}</div>
+                <span className="feature-tag">{f.tag}</span>
+                <h3 className="feature-title">{f.title}</h3>
+                <p className="feature-desc">{f.desc}</p>
               </div>
-              <h3 className="card-title">Speech & Text Answer Capture</h3>
-              <p className="card-description">
-                Speak naturally using the browser <em>Web Speech API</em> or type technical code answers. Features live audio waveforms, editable transcripts, and text fallback.
-              </p>
-              <div className="card-inner-preview">
-                <div className="preview-channel-item">
-                  <span className="ch-icon">🎙️</span> Speech Recognition <span className="pill-live-green">live mic</span>
-                </div>
-                <div className="preview-channel-item">
-                  <span className="ch-icon">✏️</span> Editable Transcript <span className="pill-live-green">active</span>
-                </div>
-                <div className="preview-channel-item muted">
-                  <span className="ch-icon">💻</span> Text & Code Fallback <span className="pill-syncing">ready</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Evidence-Grounded LLM Feedback */}
-            <div className="cirrus-feature-card cirrus-card">
-              <div className="card-badge-icon">
-                <BrainCircuit size={18} />
-              </div>
-              <h3 className="card-title">Evidence-Grounded AI Feedback</h3>
-              <p className="card-description">
-                RAG-supported evaluation scores answers on <em>Technical Accuracy</em>, <em>Communication</em>, and <em>Problem Solving</em> with zero unsupported claims.
-              </p>
-              <div className="card-inner-preview">
-                <div className="progress-bar-line">
-                  <span className="lbl">Accuracy</span>
-                  <div className="bar-track"><div className="bar-fill blue" style={{ width: '88%' }} /></div>
-                  <span className="val font-mono">88%</span>
-                </div>
-                <div className="progress-bar-line">
-                  <span className="lbl">Clarity</span>
-                  <div className="bar-track"><div className="bar-fill orange" style={{ width: '92%' }} /></div>
-                  <span className="val font-mono">92%</span>
-                </div>
-                <div className="progress-bar-line">
-                  <span className="lbl">Efficiency</span>
-                  <div className="bar-track"><div className="bar-fill green" style={{ width: '84%' }} /></div>
-                  <span className="val font-mono">84%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3: Recruiter Screening & Decision Support */}
-            <div className="cirrus-feature-card cirrus-card">
-              <div className="card-badge-icon">
-                <UserCheck size={18} />
-              </div>
-              <h3 className="card-title">Recruiter Screening Portal</h3>
-              <p className="card-description">
-                HR candidate directory with domain-readiness scores, AI summaries, and human decision notes. <em>Decision-support labeled</em> (human review required).
-              </p>
-              <div className="card-inner-preview">
-                <div className="metric-row-sm">
-                  <span className="lbl font-mono">👤 Candidate Screening</span>
-                  <span className="val font-mono">28 candidates</span>
-                </div>
-                <div className="metric-row-sm">
-                  <span className="lbl font-mono">🛡 RBAC Data Isolation</span>
-                  <span className="val font-mono font-weight-600">Enforced</span>
-                </div>
-                <div className="metric-row-sm">
-                  <span className="lbl font-mono">📄 PDF / CSV Export</span>
-                  <span className="val font-mono">Supported</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ============================================================
-          SPLIT FEATURE BLOCK (Session Lifecycle & PRD Requirements)
-      ============================================================ */}
-      <section className="cirrus-split-section section">
+      {/* ─────────────────────────────────────
+          4. HOW IT WORKS
+      ───────────────────────────────────── */}
+      <section className="section how-section">
         <div className="container">
-          <div className="split-layout-grid">
-            {/* Left Column Text */}
-            <div className="split-text-col">
-              <h2 className="split-headline font-display">
-                Mock interview prep stops <br />
-                being stressful and expensive.
-              </h2>
-              <p className="split-sub">
-                Practice technical questions anytime with objective, repeatable feedback. Human mock interviews are expensive and hard to schedule at scale—AI Interview Coach provides structured preparation in seconds.
-              </p>
-
-              <div className="bullet-points-list">
-                <div className="bullet-item">
-                  <div className="check-badge"><CheckCircle2 size={16} /></div>
-                  <div>
-                    <h4 className="bullet-title">Structured 3-Domain Question Bank</h4>
-                    <p className="bullet-desc">Tuned for Data Structures & Algorithms, DBMS, and Full Stack Web Development.</p>
-                  </div>
+          <div className="section-header">
+            <h2 className="section-title">How it works</h2>
+            <p className="section-sub">From zero to AI-graded interview feedback in under 3 minutes.</p>
+          </div>
+          <div className="steps-row">
+            {STEPS.map((s, i) => (
+              <React.Fragment key={i}>
+                <div className="step-card">
+                  <div className="step-num">{s.step}</div>
+                  <div className="step-icon-ring">{s.icon}</div>
+                  <h3 className="step-title">{s.title}</h3>
+                  <p className="step-desc">{s.desc}</p>
                 </div>
-
-                <div className="bullet-item">
-                  <div className="check-badge"><CheckCircle2 size={16} /></div>
-                  <div>
-                    <h4 className="bullet-title">Session State Lifecycle Management</h4>
-                    <p className="bullet-desc">Tracked states: SCHEDULED → IN_PROGRESS → PROCESSING_FEEDBACK → COMPLETED.</p>
-                  </div>
-                </div>
-
-                <div className="bullet-item">
-                  <div className="check-badge"><CheckCircle2 size={16} /></div>
-                  <div>
-                    <h4 className="bullet-title">Downloadable Reports & Analytics</h4>
-                    <p className="bullet-desc">Export comprehensive PDF/CSV session summaries for archiving or sharing with hiring managers.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="split-cta-row">
-                <Link to="/simulator" className="btn-black-pill">
-                  <Play size={15} /> Start Mock Simulator
-                </Link>
-                <Link to="/recruiter" className="btn-white-pill">
-                  Explore Recruiter Portal <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Column Floating Session Preview Card */}
-            <div className="split-card-col">
-              <div className="floating-inbox-card cirrus-card">
-                <div className="inbox-card-hdr">
-                  <div className="inbox-title font-display">Candidate Directory <span className="pill-badge-black font-mono">28 candidates</span></div>
-                  <div className="inbox-search"><Search size={13} /> Filter candidates</div>
-                </div>
-
-                <div className="inbox-threads-stack">
-                  <div className="thread-item active">
-                    <div className="thread-avatar">LC</div>
-                    <div className="thread-content">
-                      <div className="thread-top">
-                        <span className="thread-name">Love Chauhan</span>
-                        <span className="status-pill-black font-mono">92/100 Recommended</span>
-                      </div>
-                      <p className="thread-snippet">DSA: 92% · DBMS: 88% · Full Stack: 94%. Strong problem solving in graph traversal.</p>
-                    </div>
-                  </div>
-
-                  <div className="thread-item">
-                    <div className="thread-avatar">MR</div>
-                    <div className="thread-content">
-                      <div className="thread-top">
-                        <span className="thread-name">Maya Roussel</span>
-                        <span className="status-pill-outline font-mono">88/100 Recommended</span>
-                      </div>
-                      <p className="thread-snippet">DBMS: 90% · Full Stack: 86%. Clear explanation of ACID transactions & isolation levels.</p>
-                    </div>
-                  </div>
-
-                  <div className="thread-item">
-                    <div className="thread-avatar">JT</div>
-                    <div className="thread-content">
-                      <div className="thread-top">
-                        <span className="thread-name">Jonas T.</span>
-                        <span className="status-pill-outline font-mono">84/100 Review</span>
-                      </div>
-                      <p className="thread-snippet">DSA: 84% · Good understanding of dynamic programming memoization.</p>
-                    </div>
-                  </div>
-
-                  <div className="thread-item">
-                    <div className="thread-avatar">AO</div>
-                    <div className="thread-content">
-                      <div className="thread-top">
-                        <span className="thread-name">Aiko Ono</span>
-                        <span className="status-pill-orange font-mono">Needs Practice</span>
-                      </div>
-                      <p className="thread-snippet">Full Stack: 76% · Needs review on React hooks closure scope & dependency arrays.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                {i < STEPS.length - 1 && <div className="step-connector"><ArrowRight size={20} /></div>}
+              </React.Fragment>
+            ))}
+          </div>
+          <div className="how-cta-center">
+            <button className="btn-dark-pill" onClick={() => openAuth('candidate')}>
+              <Play size={15} fill="currentColor" /> Start Your First Session
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ============================================================
-          TECHNICAL DOMAIN TRACKS SECTION (PRD Compliant)
-      ============================================================ */}
-      <section className="cirrus-pricing-section section">
+      {/* ─────────────────────────────────────
+          5. TESTIMONIALS
+      ───────────────────────────────────── */}
+      <section className="section testimonials-section">
         <div className="container">
-          <div className="pricing-header-center">
-            <h2 className="pricing-title font-display">Select Your Technical Practice Domain</h2>
-            <p className="pricing-sub">Practice dynamic questions generated and evaluated across three core engineering tracks.</p>
+          <div className="section-header">
+            <h2 className="section-title">What people are saying</h2>
+            <p className="section-sub">From candidates who aced their interviews, and recruiters who saved hours.</p>
           </div>
-
-          <div className="pricing-cards-grid">
-            {/* Track 1: DSA */}
-            <div className="pricing-card cirrus-card">
-              <div className="card-badge-icon">
-                <Code2 size={20} />
+          <div className="testimonials-grid">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="testimonial-card">
+                <div className="testimonial-stars">
+                  {Array.from({ length: t.stars }).map((_, si) => (
+                    <Star key={si} size={14} fill="#f59e0b" color="#f59e0b" />
+                  ))}
+                </div>
+                <p className="testimonial-quote">"{t.quote}"</p>
+                <div className="testimonial-author">
+                  <div className="testimonial-avatar" style={{ background: t.avatarBg }}>{t.avatar}</div>
+                  <div>
+                    <div className="testimonial-name">{t.name}</div>
+                    <div className="testimonial-role">{t.role}</div>
+                  </div>
+                  <span className={`testimonial-tag tag-${t.tag.toLowerCase()}`}>{t.tag}</span>
+                </div>
               </div>
-              <div className="pricing-card-name font-display">Data Structures & Algorithms</div>
-              <p className="pricing-desc">Arrays, Trees, Graphs, Dynamic Programming, Heaps, and Sorting algorithms.</p>
-              <ul className="pricing-features-list">
-                <li><CheckCircle2 size={15} className="ic-check" /> 6 Curated questions</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> Spoken complexity analysis</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> Time/Space O(N) evaluation</li>
-              </ul>
-              <button className="btn-white-pill full-width-btn" onClick={() => handleStartQuickSession('DSA')}>
-                Practice DSA Track
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────
+          6. FAQ
+      ───────────────────────────────────── */}
+      <section className="section faq-section">
+        <div className="container faq-container">
+          <div className="section-header">
+            <h2 className="section-title">Frequently asked questions</h2>
+            <p className="section-sub">Everything you need to know before you start.</p>
+          </div>
+          <div className="faq-list">
+            {FAQS.map((faq, i) => (
+              <FaqItem key={i} q={faq.q} a={faq.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────
+          7. CTA BANNER
+      ───────────────────────────────────── */}
+      <section className="cta-banner-section">
+        <div className="container">
+          <div className="cta-banner-card">
+            <div className="cta-banner-glow" />
+            <Trophy size={36} className="cta-banner-icon" />
+            <h2 className="cta-banner-title">Ready to land your dream role?</h2>
+            <p className="cta-banner-sub">
+              Join candidates already practicing on AI Interview Coach. No cost. No setup. Start now.
+            </p>
+            <div className="cta-banner-actions">
+              <button className="btn-white-solid" onClick={() => openAuth('candidate')}>
+                🎓 Sign up as Candidate
               </button>
-            </div>
-
-            {/* Track 2: DBMS */}
-            <div className="pricing-card cirrus-card recommended-pricing-card">
-              <div className="pricing-badge-row">
-                <div className="card-badge-icon">
-                  <Database size={20} />
-                </div>
-                <span className="badge-black-sm font-mono">Popular</span>
-              </div>
-              <div className="pricing-card-name font-display">Database Management</div>
-              <p className="pricing-desc">ACID properties, B+ Tree Indexing, SQL Joins, Transactions, and Normalization.</p>
-              <ul className="pricing-features-list">
-                <li><CheckCircle2 size={15} className="ic-check" /> 6 Curated questions</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> Query optimization feedback</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> Transaction isolation levels</li>
-              </ul>
-              <button className="btn-black-pill full-width-btn" onClick={() => handleStartQuickSession('DBMS')}>
-                Practice DBMS Track
-              </button>
-            </div>
-
-            {/* Track 3: Full Stack */}
-            <div className="pricing-card cirrus-card">
-              <div className="card-badge-icon">
-                <Layers size={20} />
-              </div>
-              <div className="pricing-card-name font-display">Full Stack Web Development</div>
-              <p className="pricing-desc">React, Node.js, Express, REST APIs, JWT Auth, microservices, and web performance.</p>
-              <ul className="pricing-features-list">
-                <li><CheckCircle2 size={15} className="ic-check" /> 6 Curated questions</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> Architecture & API design</li>
-                <li><CheckCircle2 size={15} className="ic-check" /> State management evaluation</li>
-              </ul>
-              <button className="btn-white-pill full-width-btn" onClick={() => handleStartQuickSession('Full Stack')}>
-                Practice Full Stack Track
+              <button className="btn-white-outline" onClick={() => openAuth('recruiter')}>
+                🧑‍💼 Sign up as Recruiter
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="cirrus-footer">
-        <div className="container footer-container">
-          <div className="footer-left">
-            <div className="cirrus-asterisk-icon sm"><Sparkles size={13} /></div>
-            <span className="font-display footer-brand">AI Interview Coach</span>
-            <span className="footer-copy font-mono">© 2026 EduTech & HR Tech Platform. GenAI Technical Decision Support.</span>
+      {/* ─────────────────────────────────────
+          8. FOOTER
+      ───────────────────────────────────── */}
+      <footer className="landing-footer">
+        <div className="container footer-inner">
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <Sparkles size={14} />
+            </div>
+            <span className="footer-brand-name">AI Interview Coach</span>
+            <span className="footer-copy">© 2026 EduTech &amp; HR Tech Platform</span>
           </div>
-          <div className="footer-links-row">
-            <Link to="/simulator">Simulator</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/recruiter">Recruiter</Link>
-            <Link to="/admin">Admin</Link>
+          <div className="footer-links">
+            <button onClick={() => openAuth('candidate')} className="footer-link">Candidate Login</button>
+            <button onClick={() => openAuth('recruiter')} className="footer-link">Recruiter Login</button>
+            <button onClick={() => openAuth('admin')} className="footer-link">Admin</button>
           </div>
         </div>
       </footer>

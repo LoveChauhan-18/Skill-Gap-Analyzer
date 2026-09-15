@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { X, Lock, Mail, User, ShieldCheck, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import './AuthModal.css'
 
 export default function AuthModal() {
-  const { authModalOpen, setAuthModalOpen, login, signup } = useAuth()
+  const { authModalOpen, setAuthModalOpen, login, signup, ROLE_HOME } = useAuth()
+  const navigate = useNavigate()
   const [tab, setTab] = useState('login') // 'login' or 'signup'
   const [role, setRole] = useState('candidate')
   const [name, setName] = useState('')
@@ -28,10 +30,17 @@ export default function AuthModal() {
       return
     }
 
+    let result
     if (tab === 'login') {
-      login(email, password, role)
+      result = login(email, password, role)
     } else {
-      signup(name, email, password, role)
+      result = signup(name, email, password, role)
+    }
+
+    // Redirect to role's home page after successful auth
+    if (result?.success) {
+      const destination = ROLE_HOME[result.user.role] || '/'
+      navigate(destination, { replace: true })
     }
   }
 
@@ -47,18 +56,18 @@ export default function AuthModal() {
             <ShieldCheck size={26} />
           </div>
           <h2>{tab === 'login' ? 'Welcome Back' : 'Create Account'}</h2>
-          <p>Access AI Interview Coach & RBAC Portals</p>
+          <p>Access AI Interview Coach &amp; Role-Based Portals</p>
         </div>
 
         {/* Tab switcher */}
         <div className="auth-tabs">
-          <button 
+          <button
             className={`auth-tab ${tab === 'login' ? 'active' : ''}`}
             onClick={() => { setTab('login'); setError('') }}
           >
             Sign In
           </button>
-          <button 
+          <button
             className={`auth-tab ${tab === 'signup' ? 'active' : ''}`}
             onClick={() => { setTab('signup'); setError('') }}
           >
@@ -68,28 +77,28 @@ export default function AuthModal() {
 
         {/* Role Selector */}
         <div className="role-selector-box">
-          <label className="input-label">Select Account Role</label>
+          <label className="input-label">I am a…</label>
           <div className="role-btn-group">
-            <button 
+            <button
               type="button"
               className={`role-btn ${role === 'candidate' ? 'active' : ''}`}
               onClick={() => setRole('candidate')}
             >
-              Candidate
+              🎓 Candidate
             </button>
-            <button 
+            <button
               type="button"
               className={`role-btn ${role === 'recruiter' ? 'active' : ''}`}
               onClick={() => setRole('recruiter')}
             >
-              Recruiter / HR
+              🧑‍💼 Recruiter / HR
             </button>
-            <button 
+            <button
               type="button"
               className={`role-btn ${role === 'admin' ? 'active' : ''}`}
               onClick={() => setRole('admin')}
             >
-              Admin
+              🛡️ Admin
             </button>
           </div>
         </div>
@@ -102,9 +111,9 @@ export default function AuthModal() {
               <label className="input-label">Full Name</label>
               <div className="input-icon-wrapper">
                 <User size={18} className="icon" />
-                <input 
-                  type="text" 
-                  className="input-field" 
+                <input
+                  type="text"
+                  className="input-field"
                   placeholder="e.g. Alex Rivera"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -117,9 +126,9 @@ export default function AuthModal() {
             <label className="input-label">Email Address</label>
             <div className="input-icon-wrapper">
               <Mail size={18} className="icon" />
-              <input 
-                type="email" 
-                className="input-field" 
+              <input
+                type="email"
+                className="input-field"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -131,9 +140,9 @@ export default function AuthModal() {
             <label className="input-label">Password</label>
             <div className="input-icon-wrapper">
               <Lock size={18} className="icon" />
-              <input 
-                type="password" 
-                className="input-field" 
+              <input
+                type="password"
+                className="input-field"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -142,12 +151,12 @@ export default function AuthModal() {
           </div>
 
           <button type="submit" className="btn btn-accent auth-submit-btn">
-            {tab === 'login' ? 'Authenticate (JWT)' : 'Create Account'}
+            {tab === 'login' ? 'Sign In & Continue' : 'Create Account'}
           </button>
         </form>
 
         <div className="auth-footer-note">
-          <CheckCircle2 size={14} /> Passwords hashed with bcrypt; Session secured via JWT token.
+          <CheckCircle2 size={14} /> Passwords hashed with bcrypt · Session secured via JWT token.
         </div>
       </div>
     </div>

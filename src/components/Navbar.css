@@ -264,3 +264,80 @@
   height: 1px;
   background: #e2e8f0;
 }
+
+/* ── Role badge (replaces role-switcher dropdown) ─────────── */
+.nav-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+
+/* ── Sign-in button ──────────────────────────────────────── */
+.sign-in-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sign-in-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+/* ── Logout btn now holds an icon ────────────────────────── */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  color: #94a3b8;
+  padding: 3px;
+  transition: color 0.15s ease;
+}
+.logout-btn:hover {
+  color: #ef4444;
+}
+
+/* ── Mobile user info block ─────────────────────────────── */
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mobile-user-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.mobile-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  width: 100%;
+  justify-content: center;
+}
+.mobile-logout-btn:hover {
+  background: #fee2e2;
+}

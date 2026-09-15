@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useCallback } from 'react'
 
 const AuthContext = createContext(null)
 
@@ -14,7 +14,7 @@ const MOCK_USERS = {
   },
   recruiter: {
     id: 'usr_rec_202',
-    name: 'Sarah Chen (Senior Technical Recruiter)',
+    name: 'Sarah Chen',
     email: 'sarah.chen@techrecruiters.io',
     role: 'recruiter',
     company: 'Apex Tech Solutions',
@@ -23,7 +23,7 @@ const MOCK_USERS = {
   },
   admin: {
     id: 'usr_adm_303',
-    name: 'Marcus Vance (Platform Admin)',
+    name: 'Marcus Vance',
     email: 'admin@ai-interview-coach.io',
     role: 'admin',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
@@ -31,23 +31,22 @@ const MOCK_USERS = {
   },
 }
 
+// Role → home page mapping (single source of truth)
+export const ROLE_HOME = {
+  candidate: '/dashboard',
+  recruiter: '/recruiter',
+  admin: '/admin',
+}
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedRole = localStorage.getItem('ai_coach_role') || 'candidate'
-    return MOCK_USERS[savedRole] || MOCK_USERS.candidate
-  })
-
-  const [token, setToken] = useState(() => localStorage.getItem('ai_coach_jwt') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_token')
+  // Start unauthenticated — users must explicitly log in
+  const [user, setUser] = useState(null)
+  const [token, setToken] = useState(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  // Callback set by AuthModal/ProtectedRoute so we can redirect after login
+  const [postLoginRedirect, setPostLoginRedirect] = useState(null)
 
-  const switchRole = (newRole) => {
-    if (MOCK_USERS[newRole]) {
-      setUser(MOCK_USERS[newRole])
-      localStorage.setItem('ai_coach_role', newRole)
-    }
-  }
-
-  const login = (email, password, role = 'candidate') => {
+  const login = useCallback((email, password, role = 'candidate') => {
     const selectedUser = MOCK_USERS[role] || {
       id: `usr_${Date.now()}`,
       name: email.split('@')[0],
@@ -60,13 +59,11 @@ export const AuthProvider = ({ children }) => {
     const mockJwt = `eyJhbGciOiJIUzI1NiJ9.${btoa(JSON.stringify({ id: selectedUser.id, role: selectedUser.role }))}.sign`
     setUser(selectedUser)
     setToken(mockJwt)
-    localStorage.setItem('ai_coach_role', role)
-    localStorage.setItem('ai_coach_jwt', mockJwt)
     setAuthModalOpen(false)
     return { success: true, user: selectedUser }
-  }
+  }, [])
 
-  const signup = (name, email, password, role = 'candidate') => {
+  const signup = useCallback((name, email, password, role = 'candidate') => {
     const newUser = {
       id: `usr_${Date.now()}`,
       name,
@@ -78,18 +75,14 @@ export const AuthProvider = ({ children }) => {
     const mockJwt = `eyJhbGciOiJIUzI1NiJ9.${btoa(JSON.stringify({ id: newUser.id, role: newUser.role }))}.sign`
     setUser(newUser)
     setToken(mockJwt)
-    localStorage.setItem('ai_coach_role', role)
-    localStorage.setItem('ai_coach_jwt', mockJwt)
     setAuthModalOpen(false)
     return { success: true, user: newUser }
-  }
+  }, [])
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null)
     setToken(null)
-    localStorage.removeItem('ai_coach_role')
-    localStorage.removeItem('ai_coach_jwt')
-  }
+  }, [])
 
   return (
     <AuthContext.Provider
@@ -97,12 +90,14 @@ export const AuthProvider = ({ children }) => {
         user,
         token,
         isAuthenticated: !!user,
-        switchRole,
         login,
         signup,
         logout,
         authModalOpen,
         setAuthModalOpen,
+        postLoginRedirect,
+        setPostLoginRedirect,
+        ROLE_HOME,
       }}
     >
       {children}

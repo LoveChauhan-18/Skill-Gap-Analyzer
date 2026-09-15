@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext'
 import { InterviewProvider } from './context/InterviewContext'
 import AuthModal from './components/AuthModal'
 import Toast from './components/Toast'
+import ProtectedRoute from './components/ProtectedRoute'
 
 import Landing from './pages/Landing'
 import InterviewSimulator from './pages/InterviewSimulator'
@@ -21,11 +22,47 @@ export default function App() {
           <div className="app-root">
             <AnimatedBackground />
             <Routes>
+              {/* Public */}
               <Route path="/" element={<Landing />} />
-              <Route path="/simulator" element={<InterviewSimulator />} />
-              <Route path="/dashboard" element={<CandidateDashboard />} />
-              <Route path="/recruiter" element={<RecruiterDashboard />} />
-              <Route path="/admin" element={<AdminAnalytics />} />
+
+              {/* Candidate only */}
+              <Route
+                path="/simulator"
+                element={
+                  <ProtectedRoute allowedRoles={['candidate']}>
+                    <InterviewSimulator />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={['candidate']}>
+                    <CandidateDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Recruiter + Admin */}
+              <Route
+                path="/recruiter"
+                element={
+                  <ProtectedRoute allowedRoles={['recruiter', 'admin']}>
+                    <RecruiterDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin only */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminAnalytics />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <AuthModal />

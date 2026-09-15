@@ -1,24 +1,46 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Sparkles, ChevronDown, User, Shield, Terminal, ArrowUpRight, Menu, X } from 'lucide-react'
+import { Sparkles, ArrowUpRight, Menu, X, LogOut, LogIn } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
 
+// Role-based navigation link definitions
+const NAV_LINKS = {
+  candidate: [
+    { to: '/',           label: 'Home' },
+    { to: '/simulator',  label: 'Simulator' },
+    { to: '/dashboard',  label: 'My Dashboard' },
+  ],
+  recruiter: [
+    { to: '/',           label: 'Home' },
+    { to: '/recruiter',  label: 'Recruiter Portal' },
+  ],
+  admin: [
+    { to: '/',           label: 'Home' },
+    { to: '/admin',      label: 'Analytics' },
+    { to: '/recruiter',  label: 'Candidate Screening' },
+  ],
+}
+
+// Role badge colours
+const ROLE_STYLES = {
+  candidate: { bg: '#ecfdf5', color: '#059669', border: '#a7f3d0', label: '🎓 Candidate' },
+  recruiter: { bg: '#fff7ed', color: '#ea580c', border: '#fed7aa', label: '🧑‍💼 Recruiter' },
+  admin:     { bg: '#eff6ff', color: '#2563eb', border: '#bfdbfe', label: '🛡️ Admin' },
+}
+
 export default function Navbar() {
   const location = useLocation()
-  const { role, user, isAuthenticated, logout, switchRole, openAuthModal } = useAuth()
-  const [roleDropdownOpen, setRoleDropdownOpen] = useState(false)
+  const { user, isAuthenticated, logout, setAuthModalOpen } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const roles = [
-    { id: 'candidate', name: 'Candidate', label: 'Practice & Feedback', color: '#10b981' },
-    { id: 'recruiter', name: 'Recruiter', label: 'Candidate Screening', color: '#f97316' },
-    { id: 'admin', name: 'Admin', label: 'Platform Analytics', color: '#2563eb' }
-  ]
+  const role = user?.role || 'candidate'
+  const links = isAuthenticated ? (NAV_LINKS[role] || NAV_LINKS.candidate) : [{ to: '/', label: 'Home' }]
+  const roleStyle = ROLE_STYLES[role]
 
-  const handleRoleChange = (roleId) => {
-    switchRole(roleId)
-    setRoleDropdownOpen(false)
+  const handleLogout = () => {
+    logout()
+    setMobileMenuOpen(false)
   }
 
   return (
@@ -34,81 +56,74 @@ export default function Navbar() {
             <span className="brand-name">AI Coach</span>
           </Link>
 
-          {/* Centered Segmented Navigation Links */}
+          {/* Centered Role-Scoped Navigation Links */}
           <div className="nav-menu-center desktop-only">
-            <Link to="/" className={`nav-tab ${location.pathname === '/' ? 'active' : ''}`}>
-              Overview
-            </Link>
-            <Link to="/simulator" className={`nav-tab ${location.pathname === '/simulator' ? 'active' : ''}`}>
-              Simulator
-            </Link>
-            <Link to="/dashboard" className={`nav-tab ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-              Dashboard
-            </Link>
-            <Link to="/recruiter" className={`nav-tab ${location.pathname === '/recruiter' ? 'active' : ''}`}>
-              Recruiter
-            </Link>
-            <Link to="/admin" className={`nav-tab ${location.pathname === '/admin' ? 'active' : ''}`}>
-              Analytics
-            </Link>
+            {links.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`nav-tab ${location.pathname === to ? 'active' : ''}`}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
 
           {/* Right Actions */}
           <div className="nav-actions-right desktop-only">
-            {/* Role Switcher Pill */}
-            <div className="role-dropdown-container">
-              <button
-                className="role-pill-btn"
-                onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-              >
-                <span className="role-dot" style={{ backgroundColor: roles.find(r => r.id === role)?.color }} />
-                <span className="role-text">{role}</span>
-                <ChevronDown size={14} className={`chevron ${roleDropdownOpen ? 'open' : ''}`} />
-              </button>
-
-              {roleDropdownOpen && (
-                <div className="role-menu-card">
-                  <div className="menu-header">SWITCH ROLE VIEW</div>
-                  {roles.map((r) => (
-                    <button
-                      key={r.id}
-                      className={`menu-item ${role === r.id ? 'active' : ''}`}
-                      onClick={() => handleRoleChange(r.id)}
-                    >
-                      <span className="item-dot" style={{ backgroundColor: r.color }} />
-                      <div>
-                        <div className="item-name">{r.name}</div>
-                        <div className="item-label">{r.label}</div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Auth Buttons */}
             {isAuthenticated ? (
-              <div className="user-badge-pill">
-                <span className="user-name">{user?.name}</span>
-                <button className="logout-btn" onClick={logout} title="Sign Out">
-                  ✕
-                </button>
-              </div>
-            ) : (
-              <button className="sign-in-btn" onClick={() => openAuthModal('login')}>
-                Sign in
-              </button>
-            )}
+              <>
+                {/* Role Badge */}
+                <span
+                  className="nav-role-badge"
+                  style={{
+                    background: roleStyle.bg,
+                    color: roleStyle.color,
+                    border: `1px solid ${roleStyle.border}`,
+                  }}
+                >
+                  {roleStyle.label}
+                </span>
 
-            <Link to="/simulator" className="btn-black-pill nav-cta">
-              <span>Start Mock</span>
-              <ArrowUpRight size={15} />
-            </Link>
+                {/* User Pill */}
+                <div className="user-badge-pill">
+                  <span className="user-name">{user?.name}</span>
+                  <button className="logout-btn" onClick={handleLogout} title="Sign Out">
+                    <LogOut size={13} />
+                  </button>
+                </div>
+
+                {/* CTA for candidates only */}
+                {role === 'candidate' && (
+                  <Link to="/simulator" className="btn-black-pill nav-cta">
+                    <span>Start Mock</span>
+                    <ArrowUpRight size={15} />
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <button
+                  className="sign-in-btn"
+                  onClick={() => setAuthModalOpen(true)}
+                >
+                  <LogIn size={15} />
+                  Sign In
+                </button>
+                <button
+                  className="btn-black-pill nav-cta"
+                  onClick={() => setAuthModalOpen(true)}
+                >
+                  <span>Get Started</span>
+                  <ArrowUpRight size={15} />
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Toggle */}
-          <button 
-            className="mobile-hamburger-btn mobile-only" 
+          <button
+            className="mobile-hamburger-btn mobile-only"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -120,17 +135,41 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="mobile-drawer-overlay">
           <div className="mobile-drawer-card">
-            <Link to="/" onClick={() => setMobileMenuOpen(false)}>Overview</Link>
-            <Link to="/simulator" onClick={() => setMobileMenuOpen(false)}>Simulator</Link>
-            <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
-            <Link to="/recruiter" onClick={() => setMobileMenuOpen(false)}>Recruiter</Link>
-            <Link to="/admin" onClick={() => setMobileMenuOpen(false)}>Analytics</Link>
-            
+            {links.map(({ to, label }) => (
+              <Link key={to} to={to} onClick={() => setMobileMenuOpen(false)}>
+                {label}
+              </Link>
+            ))}
+
             <div className="mobile-divider" />
-            
-            <Link to="/simulator" className="btn-black-pill" onClick={() => setMobileMenuOpen(false)}>
-              Start Mock Interview
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <div className="mobile-user-info">
+                  <span className="mobile-user-name">{user?.name}</span>
+                  <span
+                    className="nav-role-badge"
+                    style={{
+                      background: roleStyle.bg,
+                      color: roleStyle.color,
+                      border: `1px solid ${roleStyle.border}`,
+                    }}
+                  >
+                    {roleStyle.label}
+                  </span>
+                </div>
+                <button className="mobile-logout-btn" onClick={handleLogout}>
+                  <LogOut size={15} /> Sign Out
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn-black-pill"
+                onClick={() => { setMobileMenuOpen(false); setAuthModalOpen(true) }}
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       )}
