@@ -16,6 +16,7 @@ import CandidateDashboard from './pages/CandidateDashboard'
 import RecruiterDashboard from './pages/RecruiterDashboard'
 import AdminAnalytics from './pages/AdminAnalytics'
 import AnimatedBackground from './components/AnimatedBackground'
+import CustomCursor from './components/CustomCursor'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <InterviewProvider>
           <SmoothScroll>
             <div className="app-root">
+              <CustomCursor />
               <ScrollProgressBar />
               <AnimatedBackground />
               <Routes>
