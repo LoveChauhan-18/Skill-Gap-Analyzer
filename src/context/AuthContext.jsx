@@ -43,8 +43,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [authModalTab, setAuthModalTab] = useState('login')
   // Callback set by AuthModal/ProtectedRoute so we can redirect after login
   const [postLoginRedirect, setPostLoginRedirect] = useState(null)
+
+  const openAuthModal = useCallback((initialTab = 'login') => {
+    setAuthModalTab(initialTab)
+    setAuthModalOpen(true)
+  }, [])
 
   const login = useCallback((email, password, role = 'candidate') => {
     const selectedUser = MOCK_USERS[role] || {
@@ -95,6 +101,9 @@ export const AuthProvider = ({ children }) => {
         logout,
         authModalOpen,
         setAuthModalOpen,
+        authModalTab,
+        setAuthModalTab,
+        openAuthModal,
         postLoginRedirect,
         setPostLoginRedirect,
         ROLE_HOME,

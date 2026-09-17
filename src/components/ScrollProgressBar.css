@@ -1,0 +1,21 @@
+/* Top Scroll Progress Indicator Bar */
+.scroll-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 9999;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: 0% 50%;
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 35%, #ec4899 70%, #06b6d4 100%);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.8), 0 0 20px rgba(124, 58, 237, 0.6);
+  border-radius: 0 2px 2px 0;
+  will-change: transform;
+}

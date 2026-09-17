@@ -95,7 +95,7 @@ export default function DashboardPreview() {
             <h3 className="dbp-main-title">Gap Analysis</h3>
             <p className="dbp-main-subtitle">Target: Senior Frontend Engineer</p>
           </div>
-          <button className="dbp-quick-btn">⚡ Quick Analyze</button>
+          <button className="dbp-quick-btn">Quick Analyze</button>
         </div>
 
         {/* Stats Row */}

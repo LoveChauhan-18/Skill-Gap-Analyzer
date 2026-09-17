@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import {
   Sparkles,
   Mic,
@@ -19,12 +19,20 @@ import {
   FileDown,
   Code2,
   Database,
-  Layers
+  Layers,
+  GraduationCap,
+  Briefcase
 } from 'lucide-react'
 import Navbar from '../components/Navbar'
+import SectionSidebar from '../components/SectionSidebar'
 import { useInterview } from '../context/InterviewContext'
 import { useAuth } from '../context/AuthContext'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import './Landing.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 /* ── Animated count-up hook ── */
 function useCountUp(target, duration = 1800, start = false) {
@@ -60,15 +68,23 @@ function FaqItem({ q, a }) {
 }
 
 export default function Landing() {
+  const navigate = useNavigate()
   const { startSession, setSelectedDomain, setSelectedDifficulty } = useInterview()
-  const { isAuthenticated, user, ROLE_HOME, setAuthModalOpen } = useAuth()
+  const { isAuthenticated, user, ROLE_HOME, setAuthModalOpen, login } = useAuth()
   const statsRef = useRef(null)
+  const mainRef = useRef(null)
   const [statsVisible, setStatsVisible] = useState(false)
+  const isInitialMount = useRef(true)
 
-  // Redirect logged-in users to their role dashboard
-  if (isAuthenticated && user) {
-    return <Navigate to={ROLE_HOME[user.role] || '/dashboard'} replace />
-  }
+  // Only redirect if user visits landing page while ALREADY authenticated on initial load
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      if (isAuthenticated && user) {
+        navigate(ROLE_HOME[user.role] || '/dashboard', { replace: true })
+      }
+    }
+  }, [isAuthenticated, user, ROLE_HOME, navigate])
 
   // Trigger count-up animation when stats section enters viewport
   useEffect(() => {
@@ -80,13 +96,124 @@ export default function Landing() {
     return () => observer.disconnect()
   }, [])
 
+  // GSAP ScrollTrigger Animations
+  useGSAP(() => {
+    // 1. Hero Section reveal
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+    heroTl
+      .from('.hero-eyebrow', { opacity: 0, y: -20, duration: 0.6, clearProps: 'transform,opacity' })
+      .from('.hero-headline', { opacity: 0, y: 30, duration: 0.8, clearProps: 'transform,opacity' }, '-=0.3')
+      .from('.hero-sub', { opacity: 0, y: 20, duration: 0.6, clearProps: 'transform,opacity' }, '-=0.4')
+      .from('.hero-cta-split > *', { opacity: 0, y: 25, scale: 0.95, duration: 0.6, stagger: 0.15, clearProps: 'transform,opacity' }, '-=0.4')
+      .from('.hero-no-credit', { opacity: 0, duration: 0.5, clearProps: 'opacity' }, '-=0.2')
+
+    // 2. Stats Section Reveal on Scroll
+    gsap.from('.stat-pill', {
+      opacity: 0,
+      y: 40,
+      scale: 0.9,
+      duration: 0.6,
+      stagger: 0.12,
+      ease: 'back.out(1.2)',
+      clearProps: 'transform,opacity',
+      scrollTrigger: {
+        trigger: '.stats-section',
+        start: 'top 90%',
+        once: true
+      }
+    })
+
+    // 3. Feature Cards Stagger Scroll Animation
+    gsap.from('.feature-card', {
+      opacity: 0,
+      y: 50,
+      scale: 0.92,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: 'power3.out',
+      clearProps: 'transform,opacity',
+      scrollTrigger: {
+        trigger: '.features-grid',
+        start: 'top 85%',
+        once: true
+      }
+    })
+
+    // 4. How It Works Steps Scroll Animation
+    gsap.from('.step-card', {
+      opacity: 0,
+      y: 45,
+      x: -20,
+      duration: 0.7,
+      stagger: 0.2,
+      ease: 'back.out(1.1)',
+      clearProps: 'transform,opacity',
+      scrollTrigger: {
+        trigger: '.steps-row',
+        start: 'top 85%',
+        once: true
+      }
+    })
+
+    // 5. Testimonial Cards Scroll Reveal
+    gsap.from('.testimonial-card', {
+      opacity: 0,
+      y: 50,
+      rotation: 1,
+      duration: 0.7,
+      stagger: 0.15,
+      ease: 'power3.out',
+      clearProps: 'transform,opacity,rotate',
+      scrollTrigger: {
+        trigger: '.testimonials-grid',
+        start: 'top 85%',
+        once: true
+      }
+    })
+
+    // 6. FAQ Items Cascade
+    gsap.from('.faq-item', {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'power2.out',
+      clearProps: 'transform,opacity',
+      scrollTrigger: {
+        trigger: '.faq-list',
+        start: 'top 85%',
+        once: true
+      }
+    })
+
+    // 7. CTA Banner Pulsing Scale Scroll Reveal
+    gsap.from('.cta-banner-card', {
+      opacity: 0,
+      y: 60,
+      scale: 0.9,
+      duration: 0.9,
+      ease: 'back.out(1.2)',
+      clearProps: 'transform,opacity',
+      scrollTrigger: {
+        trigger: '.cta-banner-section',
+        start: 'top 85%',
+        once: true
+      }
+    })
+  }, { scope: mainRef })
+
   const sessions   = useCountUp(382,  1600, statsVisible)
   const accuracy   = useCountUp(984,  1800, statsVisible)
   const latency    = useCountUp(14,   1400, statsVisible)
   const avgScore   = useCountUp(884,  1800, statsVisible)
 
-  const openAuth = (role = 'candidate') => {
-    setAuthModalOpen(true)
+  const openDemoAccess = (role = 'candidate') => {
+    login(
+      role === 'recruiter' ? 'sarah.chen@techrecruiters.io' : 'alex.rivera@example.com',
+      'password',
+      role
+    )
+    navigate(ROLE_HOME[role] || '/simulator')
   }
 
   const FEATURES = [
@@ -194,13 +321,14 @@ export default function Landing() {
   ]
 
   return (
-    <div className="landing-page">
+    <div className="landing-page" ref={mainRef}>
       <Navbar />
+      <SectionSidebar />
 
       {/* ─────────────────────────────────────
           1. HERO
       ───────────────────────────────────── */}
-      <section className="hero-section">
+      <section className="hero-section" id="hero">
         <div className="container hero-container">
           <div className="hero-eyebrow">
             <Sparkles size={14} className="eyebrow-icon" />
@@ -218,16 +346,16 @@ export default function Landing() {
           </p>
 
           <div className="hero-cta-split">
-            <button className="hero-cta-card cta-candidate" onClick={() => openAuth('candidate')}>
-              <div className="cta-card-icon cta-icon-blue">🎓</div>
+            <button className="hero-cta-card cta-candidate" onClick={() => openDemoAccess('candidate')}>
+              <div className="cta-card-icon cta-icon-blue"><GraduationCap size={20} /></div>
               <div className="cta-card-body">
                 <div className="cta-card-title">I'm a Candidate</div>
                 <div className="cta-card-sub">Practice, get scored, track progress</div>
               </div>
               <ArrowRight size={18} className="cta-card-arrow" />
             </button>
-            <button className="hero-cta-card cta-recruiter" onClick={() => openAuth('recruiter')}>
-              <div className="cta-card-icon cta-icon-orange">🧑‍💼</div>
+            <button className="hero-cta-card cta-recruiter" onClick={() => openDemoAccess('recruiter')}>
+              <div className="cta-card-icon cta-icon-orange"><Briefcase size={20} /></div>
               <div className="cta-card-body">
                 <div className="cta-card-title">I'm a Recruiter</div>
                 <div className="cta-card-sub">Screen candidates, view AI summaries</div>
@@ -243,7 +371,7 @@ export default function Landing() {
       {/* ─────────────────────────────────────
           2. STATS TICKER
       ───────────────────────────────────── */}
-      <section className="stats-section" ref={statsRef}>
+      <section className="stats-section" ref={statsRef} id="stats">
         <div className="container stats-grid">
           <div className="stat-pill">
             <span className="stat-number">{sessions}<span className="stat-unit">+</span></span>
@@ -270,7 +398,7 @@ export default function Landing() {
       {/* ─────────────────────────────────────
           3. FEATURE GRID
       ───────────────────────────────────── */}
-      <section className="section features-section">
+      <section className="section features-section" id="features">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">Everything you need to prepare smarter</h2>
@@ -292,7 +420,7 @@ export default function Landing() {
       {/* ─────────────────────────────────────
           4. HOW IT WORKS
       ───────────────────────────────────── */}
-      <section className="section how-section">
+      <section className="section how-section" id="how-it-works">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">How it works</h2>
@@ -312,7 +440,7 @@ export default function Landing() {
             ))}
           </div>
           <div className="how-cta-center">
-            <button className="btn-dark-pill" onClick={() => openAuth('candidate')}>
+            <button className="btn-dark-pill" onClick={() => openDemoAccess('candidate')}>
               <Play size={15} fill="currentColor" /> Start Your First Session
             </button>
           </div>
@@ -322,7 +450,7 @@ export default function Landing() {
       {/* ─────────────────────────────────────
           5. TESTIMONIALS
       ───────────────────────────────────── */}
-      <section className="section testimonials-section">
+      <section className="section testimonials-section" id="testimonials">
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">What people are saying</h2>
@@ -354,7 +482,7 @@ export default function Landing() {
       {/* ─────────────────────────────────────
           6. FAQ
       ───────────────────────────────────── */}
-      <section className="section faq-section">
+      <section className="section faq-section" id="faq">
         <div className="container faq-container">
           <div className="section-header">
             <h2 className="section-title">Frequently asked questions</h2>
@@ -381,11 +509,11 @@ export default function Landing() {
               Join candidates already practicing on AI Interview Coach. No cost. No setup. Start now.
             </p>
             <div className="cta-banner-actions">
-              <button className="btn-white-solid" onClick={() => openAuth('candidate')}>
-                🎓 Sign up as Candidate
+              <button className="btn-white-solid" onClick={() => openDemoAccess('candidate')}>
+                Try Candidate Demo
               </button>
-              <button className="btn-white-outline" onClick={() => openAuth('recruiter')}>
-                🧑‍💼 Sign up as Recruiter
+              <button className="btn-white-outline" onClick={() => openDemoAccess('recruiter')}>
+                Try Recruiter Demo
               </button>
             </div>
           </div>
@@ -405,9 +533,9 @@ export default function Landing() {
             <span className="footer-copy">© 2026 EduTech &amp; HR Tech Platform</span>
           </div>
           <div className="footer-links">
-            <button onClick={() => openAuth('candidate')} className="footer-link">Candidate Login</button>
-            <button onClick={() => openAuth('recruiter')} className="footer-link">Recruiter Login</button>
-            <button onClick={() => openAuth('admin')} className="footer-link">Admin</button>
+            <button onClick={() => openDemoAccess('candidate')} className="footer-link">Candidate Login</button>
+            <button onClick={() => openDemoAccess('recruiter')} className="footer-link">Recruiter Login</button>
+            <button onClick={() => openDemoAccess('admin')} className="footer-link">Admin</button>
           </div>
         </div>
       </footer>

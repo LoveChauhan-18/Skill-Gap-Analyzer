@@ -309,12 +309,12 @@ export default function Analyze() {
 
               <div className="review-cards">
                 <div className="review-card">
-                  <div className="review-card-label">🎯 Target Role</div>
+                  <div className="review-card-label">Target Role</div>
                   <div className="review-card-value">{customRole || targetRole}</div>
                   <div className="review-card-sub">{experienceLevel}</div>
                 </div>
                 <div className="review-card">
-                  <div className="review-card-label">💼 Your Skills ({selectedSkills.length})</div>
+                  <div className="review-card-label">Your Skills ({selectedSkills.length})</div>
                   <div className="selected-skills-wrap" style={{ marginTop: 12 }}>
                     {selectedSkills.map(s => (
                       <span key={s} className="skill-tag active" style={{ fontSize: 12 }}>{s}</span>
@@ -323,7 +323,7 @@ export default function Analyze() {
                 </div>
                 {jobDescription && (
                   <div className="review-card">
-                    <div className="review-card-label">📄 Job Description</div>
+                    <div className="review-card-label">Job Description</div>
                     <p className="review-card-jd">{jobDescription.substring(0, 200)}{jobDescription.length > 200 ? '…' : ''}</p>
                   </div>
                 )}

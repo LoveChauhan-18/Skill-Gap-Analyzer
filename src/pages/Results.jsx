@@ -376,7 +376,7 @@ export default function Results() {
                         <div className="resource-priority">{String(i + 1).padStart(2, '0')}</div>
                         <div>
                           <div className="resource-section-title">{d.skill}</div>
-                          <div className="resource-section-meta">Gap: {d.gap}% · {d.gap > 30 ? '🔴 High priority' : '🟡 Medium priority'}</div>
+                          <div className="resource-section-meta">Gap: {d.gap}% · {d.gap > 30 ? 'High priority' : 'Medium priority'}</div>
                         </div>
                       </div>
                       <div className="resource-cards">

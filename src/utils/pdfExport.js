@@ -31,7 +31,7 @@ export const downloadSessionPDF = (sessionData, candidateName = 'Candidate') => 
       <body>
         <div class="header">
           <div>
-            <div class="logo">⚡ AI INTERVIEW COACH</div>
+            <div class="logo">AI INTERVIEW COACH</div>
             <div class="title">Technical Interview Evaluation Report</div>
           </div>
           <div>
@@ -84,7 +84,7 @@ export const downloadSessionPDF = (sessionData, candidateName = 'Candidate') => 
         </div>
 
         <div class="section">
-          <div class="section-title strengths">✔ Key Strengths & Demonstrated Evidence</div>
+          <div class="section-title strengths">Key Strengths & Demonstrated Evidence</div>
           <ul>
             ${(sessionData.feedback?.strengths || [
               'Correctly identified combining Hash Map with Doubly Linked List for O(1) operations.',
@@ -94,7 +94,7 @@ export const downloadSessionPDF = (sessionData, candidateName = 'Candidate') => 
         </div>
 
         <div class="section">
-          <div class="section-title gaps">⚠ Key Knowledge Gaps & Missed Points</div>
+          <div class="section-title gaps">Key Knowledge Gaps & Missed Points</div>
           <ul>
             ${(sessionData.feedback?.gaps || [
               'Did not explicitly handle edge case for zero capacity or null key check.'

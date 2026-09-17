@@ -1,6 +1,6 @@
 /* ============================================================
-   CIRRUS FLOATING PILL NAVBAR
-   Floating white capsule over sky backdrop
+   CIRRUS HIGH-VISIBILITY FLOATING PILL NAVBAR
+   High-contrast, bold capsule navigation bar
    ============================================================ */
 
 .cirrus-nav-wrapper {
@@ -18,75 +18,133 @@
 }
 
 .cirrus-navbar {
+  position: relative;
   pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: 1060px;
-  height: 58px;
-  padding: 0 12px 0 20px;
+  height: 60px;
+  padding: 0 14px 0 22px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 12px 36px -8px rgba(15, 23, 42, 0.1), 0 2px 8px rgba(15, 23, 42, 0.04);
+  background: #ffffff;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 16px 45px -8px rgba(15, 23, 42, 0.22), 0 2px 12px rgba(37, 99, 235, 0.12);
+  transition: padding 0.3s ease, height 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Brand */
+/* Animated Shimmer Border Overlay */
+.navbar-glow-border {
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 9999px;
+  padding: 1.5px;
+  background: linear-gradient(90deg, rgba(37,99,235,0.6), rgba(168,85,247,0.5), rgba(236,72,153,0.5), rgba(37,99,235,0.6));
+  background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: shimmerBorder 8s linear infinite;
+  opacity: 0.85;
+}
+
+@keyframes shimmerBorder {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 300% 0%; }
+}
+
+/* Brand Logo */
 .nav-brand {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  color: #0f172a;
 }
 
 .cirrus-asterisk-icon {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #09090b;
+  background: #2563eb;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
 }
 
 .brand-name {
-  font-family: var(--font-display);
-  font-size: 18px;
+  font-family: var(--font-display, system-ui, sans-serif);
+  font-size: 17px;
   font-weight: 800;
-  letter-spacing: -0.03em;
   color: #0f172a;
+  letter-spacing: -0.02em;
 }
 
-/* Center Menu */
+/* Center Menu with Sliding Highlight Pill */
 .nav-menu-center {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 4px;
-  background: rgba(15, 23, 42, 0.04);
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
   padding: 4px;
   border-radius: 9999px;
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+/* Sliding active/hover pill element */
+.nav-tab-highlight {
+  position: absolute;
+  top: 4px;
+  height: calc(100% - 8px);
+  background: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.16), 0 1px 3px rgba(15, 23, 42, 0.08);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  will-change: left, width, opacity;
 }
 
 .nav-tab {
-  padding: 7px 18px;
+  position: relative;
+  z-index: 2;
+  padding: 8px 20px;
   border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #64748b;
-  transition: all 0.2s ease;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
+
 .nav-tab:hover {
   color: #0f172a;
 }
+
 .nav-tab.active {
-  background: #ffffff;
   color: #0f172a;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-weight: 800;
+}
+
+/* Magnetic CTA button styling */
+.magnetic-btn {
+  will-change: transform;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.cta-icon {
+  transition: transform 0.2s ease;
 }
 
 /* Right Actions */
@@ -96,126 +154,97 @@
   gap: 12px;
 }
 
-.role-dropdown-container {
-  position: relative;
-}
-
-.role-pill-btn {
-  display: flex;
+/* ── Role badge ────────────────────────────────────────────── */
+.nav-role-badge {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: 5px;
+  padding: 5px 14px;
   border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.04);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  font-size: 12px;
-  font-weight: 600;
-  color: #475569;
-  text-transform: capitalize;
-  transition: all 0.2s ease;
-}
-.role-pill-btn:hover {
-  background: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-}
-
-.role-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-}
-
-.chevron {
-  transition: transform 0.2s ease;
-}
-.chevron.open {
-  transform: rotate(180deg);
-}
-
-/* Role Menu Card */
-.role-menu-card {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 240px;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 8px;
-  box-shadow: 0 20px 48px -12px rgba(15, 23, 42, 0.18);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  z-index: 100;
-}
-
-.menu-header {
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #94a3b8;
-  padding: 6px 10px;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
 }
 
-.menu-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  text-align: left;
-  transition: background 0.15s ease;
-}
-.menu-item:hover, .menu-item.active {
-  background: #f1f5f9;
-}
-.item-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.item-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #0f172a;
-}
-.item-label {
-  font-size: 11px;
-  color: #64748b;
-}
-
-/* Sign in */
+/* ── Sign-in button (High Contrast) ───────────────────────── */
 .sign-in-btn {
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1.5px solid #94a3b8;
   color: #0f172a;
-  padding: 8px 12px;
-  transition: color 0.2s ease;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
+
 .sign-in-btn:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.22);
+}
+
+.signin-icon {
+  transition: color 0.2s ease, transform 0.2s ease;
   color: #2563eb;
 }
 
+.sign-in-btn:hover .signin-icon {
+  color: #1d4ed8;
+  transform: translateX(2px);
+}
+
+/* ── CTA button ──────────────────────────────────────────── */
 .nav-cta {
-  padding: 9px 18px;
-  font-size: 13px;
+  padding: 9px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  background: #09090b;
+  color: #ffffff;
+  border-radius: 9999px;
+  border: none;
+  box-shadow: 0 6px 20px rgba(9, 9, 11, 0.25);
+  transition: all 0.2s ease;
+}
+
+.nav-cta:hover {
+  background: #2563eb;
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
 }
 
 .user-badge-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.05);
-  font-size: 12px;
-  font-weight: 600;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
   color: #0f172a;
 }
+
 .logout-btn {
-  color: #94a3b8;
-  font-size: 12px;
-  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  padding: 3px;
+  transition: color 0.15s ease;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
+
 .logout-btn:hover {
   color: #ef4444;
 }
@@ -229,7 +258,7 @@
   .mobile-only { display: flex !important; }
   
   .cirrus-navbar {
-    max-width: 90%;
+    max-width: 92%;
     margin: 0 auto;
   }
 }
@@ -237,6 +266,9 @@
 .mobile-hamburger-btn {
   padding: 8px;
   color: #0f172a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .mobile-drawer-overlay {
@@ -250,94 +282,19 @@
   background: #ffffff;
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  border: 1.5px solid #cbd5e1;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 .mobile-drawer-card a {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: #0f172a;
+  text-decoration: none;
 }
 .mobile-divider {
   height: 1px;
   background: #e2e8f0;
-}
-
-/* ── Role badge (replaces role-switcher dropdown) ─────────── */
-.nav-role-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1px;
-  white-space: nowrap;
-}
-
-/* ── Sign-in button ──────────────────────────────────────── */
-.sign-in-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  border-radius: 9999px;
-  background: transparent;
-  border: 1.5px solid #cbd5e1;
-  color: #0f172a;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.sign-in-btn:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-}
-
-/* ── Logout btn now holds an icon ────────────────────────── */
-.logout-btn {
-  display: flex;
-  align-items: center;
-  color: #94a3b8;
-  padding: 3px;
-  transition: color 0.15s ease;
-}
-.logout-btn:hover {
-  color: #ef4444;
-}
-
-/* ── Mobile user info block ─────────────────────────────── */
-.mobile-user-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.mobile-user-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f172a;
-}
-.mobile-logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  width: 100%;
-  justify-content: center;
-}
-.mobile-logout-btn:hover {
-  background: #fee2e2;
 }
